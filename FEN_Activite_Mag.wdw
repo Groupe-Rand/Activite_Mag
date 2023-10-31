@@ -1,0 +1,146 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : FEN_Activite_Mag
+ major_version : 25
+ minor_version : 0
+ type : 2
+ description : ""
+ subtype : 0
+window :
+ name : FEN_Activite_Mag
+ identifier : 0x2177eed90076746c
+ internal_properties : BQAAAAUAAAADPHQ06ibJ4O3RdjSB+q6xotF6Mn8hM7yPXBldluWKi8Srx5QB+PmzwsBF50PZVhU4gZtKuDY4ir9dW7rHlzfa4+UwBMY0FEr6hKH+oJy+sLoUFAq7lTQW6hGoFJwOrVPvEDRALu1rOiUoINsBggAe2I1lP9UjhtRX46KNXB+gT8z4C6sREgg30PN2+FfvX5LUeTWk0lyUdDen5vXQcOhkbcAUzsfmGJf0foShmAjkzT1U7GAHrenCs4N7LH0DFHkgdMoKkq3qHZ+CvxgsoVMXfRSI1u7ManEI/khD6f1RcZQXYFbUsrRcMK7kpeiT1byJ636soK01vWBlci8H/u54ByibimiTXqNEu6JKJfQBlyvdheCYWhJr9Py7SK0YoGVOM9IFTdzl6c0V4KnK2QscA3v8USgsVgamjp8MbcXuQiAEw7rHGeBFrJC4deAEnaSosZG2ea/7bhKl0LFcLb79VURJvSIXHZxZSwZtWG3jUSa2FjybkPvS5SB42rvJhQOgECZLUnKNlaIrgqaJQoYUo1TCun1HKh+Usi1Euwqmd0tfxEaxVtcj+13tvoHLJnkBIwwnZSF0dwuqUexlEmROUMojoQzld6r4cCRH8iPGfny8TPOdGAYQp2kUY654PuANNuek6HmlBGklyEYnbjnzSsG6WTz6luTjS9QF8UMINuc=
+ controls : []
+ menu :
+  name : _Menu
+  identifier : 0x292573e513b5f221
+  internal_properties : BQAAAAUAAABd4biPtdLQOwfUFiqrit8H4xfGqKyz9t6VLxCUnNZRQiLPVs82PZNE+UVdKRzjizyeuKyRur85gNMUfqplpmtNDnQWQla9zo+GH9+1EfUJ6w17Dn/egD/gv+Hhywk8c9unIdzEp7EHgaAqD28w7Agveg4u19PBcKGZtQ==
+  options : []
+ languages :
+  - fr-FR
+ popup_menus : []
+ message_bar :
+  internal_properties : BQAAAAUAAABqPQh6HC8RxAVkp2SqPYLuZrfVhd+1KX4lx22hIT8uqEpE6yP7Sbc2rmVqdmL816EWzXOkEe9ijOtYwchZKAfpy3B1cNqhpJgsnbUs
+ code_elements :
+  type_code : 1
+  p_codes :
+   -
+     code : |1+
+      PROCEDURE MaFenêtre()
+   -
+     code : |1+
+      Traitement()
+     type : 34
+   -
+     type : 230
+     enabled : false
+  procedures :
+   -
+     name : Traitement
+     procedure_id : 1258737365497932563
+     type_code : 14
+     code : |1+
+      // Résumé : <indiquez ici ce que fait la procédure>
+      // Syntaxe :
+      // Traitement ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      procédure Traitement()
+      
+      dDate est une date = Datesys()
+      //dDate est une date = "20220128"
+      
+      
+      Si dDate..Jour = 28 ALORS
+      	
+      	xlsDoc	est un xlsDocument
+      	nLigne	est un entier	= 2
+      	nIndice	est un entier	= 1
+      	
+      	MaDate est une Date
+      	
+      	SI dDate.Mois = 1 ALORS
+      		
+      		MaDate = DernierJourDuMois(dDate..Année - 1,12)
+      	SINON
+      		
+      		MaDate = DernierJourDuMois(dDate..Année,dDate.Mois - 1)	
+      	FIN
+      	
+      	
+      	
+      	HExécuteRequête(REQ_Societe,RANDBI,hRequêteSansCorrection)
+      	HLitPremier(REQ_Societe)
+      	TANTQUE PAS HEnDehors(REQ_Societe)
+      		
+      		
+      		xlsAjouteFeuille(xlsDoc,REQ_Societe.Societe_Appartenance,nIndice)// Ajout d'une feuille *obligatoire*
+      		
+      		xlsDoc..Feuille	= nIndice
+      		
+      		// En Tete Fichier
+      		xlsDoc[1,1]		= "Code Magasin"
+      		xlsDoc[1,2]		= "Centrale"
+      		xlsDoc[1,3]		= "Quantité"
+      		xlsDoc[1,4]		= "Date Inventaire / Date Premier jour ventes"
+      		xlsDoc[1,5]		= "VALOPPRD"
+      		xlsDoc[1,6]		= "VALOPPRD  DI"
+      		xlsDoc[1,7]		= "Taux DI"
+      		
+      		nLigne			= 2
+      		
+      		// AJOUTER DATE 
+      		HExécuteRequête(REQ_Mag,RANDBI,hRequêteSansCorrection,"'"+REQ_Societe.Societe_Appartenance+"'","'"+DateVersChaîne(MaDate,"AAAA-MM-JJ")+"'") 
+      		
+      		HLitPremier(REQ_Mag)
+      		TANTQUE PAS HEnDehors(REQ_Mag)
+      			
+      			xlsDoc[nLigne,1]	= REQ_Mag.Id_Colombus
+      			xlsDoc[nLigne,2]	= REQ_Mag.Centrale
+      			xlsDoc[nLigne,3]	= REQ_Mag.Qte
+      			xlsDoc[nLigne,4]	= REQ_Mag.DateInv
+      			xlsDoc[nLigne,5]	= REQ_Mag.VALOPPRD
+      			xlsDoc[nLigne,6]	= Val(REQ_Mag.VALOPPRD) * ( Val(REQ_Mag.Di_Moy) / 100) 
+      			xlsDoc[nLigne,7]	= Val(REQ_Mag.Di_Moy)
+      			
+      			nLigne++
+      			HLitSuivant(REQ_Mag)
+      			
+      		FIN
+      		
+      		nIndice++
+      		HLitSuivant(REQ_Societe)
+      	FIN		
+      	
+      	
+      	xlsSauve(xlsDoc,"\\Rand-freres.com\rand\COMPTABILITE\CDG - CPTA\Calcul DI\DI Magasins DATE "+MaDate+".xlsx")
+      	xlsFerme(xlsDoc)
+      	
+      	
+      FIN
+      
+      
+      
+      ferme(FEN_Activite_Mag)
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : BQAAAAUAAAAwjDLmDSZ0H1P68nJIeNfqR9EvRjU/K+sVcM1T6rhVNr+VTV1mZ/rmoweYbFDZUhBGcv8UsxlDxVCOnb2U/SQOvlGWzNby3/w/V+ppSymxv+Vh
+  original_name : Modele1
+resources :
+ string_res :
+  identifier : 0x1177eed10002577d
+  internal_properties : BQAAAAUAAAAa2Zm8J9E/zh+/WIrVvz1fER/So3PB0gjQuxc1xKQVWY4ZDm5lfg==
+custom_note :
+ internal_properties : BQAAAAUAAAC68/W0/adbG0nFCRhrE42B5HRnbDzVHaz86sSQyxlBk7I=
+rad :
+ internal_properties : BQAAAAUAAABoAN7PLpwJW3EiA7WVZdCA5EwrCA1rvutcDHooMWKe
